@@ -1,13 +1,23 @@
-const Content = ({ parts }) => {
-  //   console.log(parts);
-  const total = parts.reduce((sum, item) => sum + item.exercises, 0);
+import Header from "./Header";
+
+const Content = ({ course }) => {
+  console.log("Content", course);
+  const total = course[0].parts.reduce((sum, item) => sum + item.exercises, 0);
+  const total1 = course[1].parts.reduce((sum, item) => sum + item.exercises, 0);
+
   //   console.log(total);
   return (
     <div>
-      {parts.map((cs) => (
+      {course[0].parts.map((cs) => (
         <Part key={cs.id} name={cs.name} exercises={cs.exercises} />
       ))}
       {`total of ${total} of exercises`}
+
+      <Header header={course[1].name} />
+      {course[1].parts.map((cs) => (
+        <Part key={cs.id} name={cs.name} exercises={cs.exercises} />
+      ))}
+      {`total of ${total1} of exercises`}
     </div>
   );
 };

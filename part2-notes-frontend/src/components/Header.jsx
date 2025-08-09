@@ -1,10 +1,11 @@
 const Header = ({ header }) => {
-  console.log(header);
   return (
     <div>
-      <h1>{header}</h1>
+      <h3>{header}</h3>
     </div>
   );
 };
 
 export default Header;
+
+
