@@ -4,7 +4,7 @@ const PhoneBook = ({ phonebook }) => {
   return (
     <div>
       {phonebook.map((person) => (
-        <li>
+        <li key={person.id}>
           {person.name} {person.number}
         </li>
       ))}

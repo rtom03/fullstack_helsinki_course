@@ -1,0 +1,21 @@
+import axios from "axios";
+
+const BASE_URL = "http://localhost:3001/persons";
+
+const create = (newObject) => {
+  return axios.post(BASE_URL, newObject);
+};
+
+const get = (id) => {
+  return axios.get(`${BASE_URL}/${id}`);
+};
+
+const getAll = () => {
+  return axios.get(BASE_URL);
+};
+
+const update = (id, updateInfo) => {
+  return axios.put(`${BASE_URL}/${id}`, updateInfo);
+};
+
+export { create, get, getAll, update };
