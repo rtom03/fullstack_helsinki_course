@@ -3,6 +3,8 @@ import PhoneBook from "./components/PhoneBook";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import { create, getAll, recycle, update } from "./services/personsService.js";
+import Toast from "./components/Toast.jsx";
+// import Toast from "./components/Toast.jsx";
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "456-980-201", id: "io9" },
@@ -11,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   getAll().then((response) => setPersons(response.data));
 
@@ -45,6 +48,10 @@ const App = () => {
       setPersons(persons.concat(newObject));
       setNewName("");
       setNewNumber("");
+      setSuccessMessage(`${newObject.name} added`);
+      setTimeout(() => {
+        setSuccessMessage(null); // clears the message
+      }, 3000);
     }
   };
 
@@ -77,7 +84,9 @@ const App = () => {
 
   return (
     <div>
+      <Toast message={successMessage} />
       <h2>Phonebook</h2>
+
       <form onSubmit={getSearch}>
         filter shown with
         <input type="text" value={search} onChange={handleSearchChange} />
