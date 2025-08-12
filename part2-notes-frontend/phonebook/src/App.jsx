@@ -2,7 +2,7 @@ import { useState } from "react";
 import PhoneBook from "./components/PhoneBook";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
-import { create, getAll, recycle } from "./services/personsService.js";
+import { create, getAll, recycle, update } from "./services/personsService.js";
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "456-980-201", id: "io9" },
@@ -21,8 +21,23 @@ const App = () => {
       number: newNumber,
     };
     const existedName = persons.some((name) => name.name === newObject.name);
+
     if (existedName) {
-      alert(`${newObject.name} is already added to phonebook`);
+      const person = persons.find((person) => person.name === newObject.name);
+      console.log("id");
+
+      const updatedInfo = { ...person, number: newObject.number };
+      // console.log("UPDATED", updatedInfo, "ID:", id);
+
+      window.confirm(
+        `${newObject.name} already has a number! would you like to replace the old number with a new one?`
+      )
+        ? update(person.id, updatedInfo).then((response) =>
+            setPersons(
+              persons.map((ps) => (ps.id === person.id ? response.data : ps))
+            )
+          )
+        : "";
     } else {
       create(newObject).then((response) =>
         setPersons(persons.concat(response.data))
@@ -74,7 +89,6 @@ const App = () => {
         numValue={newNumber}
         handleNumChange={handleNumChange}
       />
-
       <h2>Numbers</h2>
       {!searchData.length ? (
         <>
