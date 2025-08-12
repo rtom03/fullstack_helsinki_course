@@ -2,10 +2,10 @@ import { useState } from "react";
 import PhoneBook from "./components/PhoneBook";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
-import { create, getAll } from "./services/personsService.js";
+import { create, getAll, recycle } from "./services/personsService.js";
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "456-980-201" },
+    { name: "Arto Hellas", number: "456-980-201", id: "io9" },
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
@@ -51,6 +51,16 @@ const App = () => {
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
   };
+
+  const handleRecycle = (id) => {
+    const person = persons.filter((person) => person.id === id);
+
+    window.confirm(`Delete ${person.map((p) => p.name).join(", ")}?`)
+      ? recycle(id).then((response) => response.data)
+      : "";
+    console.log(person);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -69,7 +79,7 @@ const App = () => {
       <h2>Numbers</h2>
       {!searchData.length ? (
         <>
-          <PhoneBook phonebook={persons} />
+          <PhoneBook phonebook={persons} handleDelete={handleRecycle} />
         </>
       ) : (
         <>

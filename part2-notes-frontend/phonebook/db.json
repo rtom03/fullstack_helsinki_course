@@ -1,34 +1,14 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
+      "id": "89c1",
+      "name": "Jane Doe",
+      "number": "908-2434-102"
     },
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": "2"
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
-      "id": "40df",
-      "name": "David",
-      "number": "890-234-216"
-    },
-    {
-      "id": "d974",
-      "name": "Miller Rich",
-      "number": "907-125-1233"
+      "id": "bf2c",
+      "name": "John Doe",
+      "number": "908-2654-123"
     }
   ]
 }
