@@ -2,6 +2,8 @@ import { useState } from "react";
 import PhoneBook from "./components/PhoneBook";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
+import axois from "axios";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -11,6 +13,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState();
   const [search, setSearch] = useState("");
   const [searchData, setSearchData] = useState([]);
+
+  axios
+    .get("http://localhost:3001/persons")
+    .then((response) => setPersons(response.data));
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -22,6 +28,9 @@ const App = () => {
     if (existedName) {
       alert(`${newObject.name} is already added to phonebook`);
     } else {
+      axois
+        .post("http://localhost:3001/persons", newObject)
+        .then((response) => setPersons(persons.concat(response.data)));
       setPersons(persons.concat(newObject));
       setNewName("");
       setNewNumber("");
