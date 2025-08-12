@@ -58,7 +58,6 @@ const App = () => {
     window.confirm(`Delete ${person.map((p) => p.name).join(", ")}?`)
       ? recycle(id).then((response) => response.data)
       : "";
-    console.log(person);
   };
 
   return (
