@@ -18,4 +18,8 @@ const update = (id, updateInfo) => {
   return axios.put(`${BASE_URL}/${id}`, updateInfo);
 };
 
-export { create, get, getAll, update };
+const recycle = (id) => {
+  return axios.delete(`${BASE_URL}/${id}`);
+};
+
+export { create, get, getAll, update, recycle };
