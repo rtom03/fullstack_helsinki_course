@@ -10,7 +10,9 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
+  const now = new Date();
+
+  response.json({});
 });
 
 const PORT = 3001;
