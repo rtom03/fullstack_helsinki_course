@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001/persons";
+const BASE_URL = "http://localhost:8001/persons";
 
 const create = (newObject) => {
   return axios.post(BASE_URL, newObject);

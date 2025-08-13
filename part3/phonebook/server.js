@@ -1,24 +1,26 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 const options = ":method :url :status :response-time ms - :res[content-length]";
+const PORT = process.env.PORT || 8001;
 
+app.use(cors());
 app.use(express.json());
 app.use(cors());
-app.use(
-  morgan(function (tokens, req, res) {
-    return [
-      tokens.method(req, res),
-      tokens.url(req, res),
-      tokens.status(req, res),
-      tokens.res(req, res, "content-length"),
-      "-",
-      tokens["response-time"](req, res),
-      "ms",
-    ].join(" ");
-  }, options)
-);
-const PORT = process.env.PORT;
+// app.use(
+//   morgan(function (tokens, req, res) {
+//     return [
+//       tokens.method(req, res),
+//       tokens.url(req, res),
+//       tokens.status(req, res),
+//       tokens.res(req, res, "content-length"),
+//       "-",
+//       tokens["response-time"](req, res),
+//       "ms",
+//     ].join(" ");
+//   }, options)
+// );
 
 let persons = [
   {
