@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Person } from "./model/Phonebook.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-import phone from "../../part2-notes-frontend/phonebook";
 // const express = require("express");
 // const morgan = require("morgan");
 // const cors = require("cors");
