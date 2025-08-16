@@ -2,14 +2,12 @@ import { useState } from "react";
 import PhoneBook from "./components/PhoneBook";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
-import { create, getAll, recycle, update } from "./services/personsService.js";
+import { create, getAll, recycle } from "./services/personsService.js";
 import Toast from "./components/Toast.jsx";
 import ExchangeRate from "./demo/ExchangeRate.jsx";
 // import Toast from "./components/Toast.jsx";
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "456-980-201", id: "io9" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
@@ -33,12 +31,16 @@ const App = () => {
       window.confirm(
         `${newObject.name} already has a number! would you like to replace the old number with a new one?`
       )
-        ? update(person.id, updatedInfo)
-            .then((response) =>
+        ? create(updatedInfo)
+            .then((response) => {
               setPersons(
-                persons.map((ps) => (ps.id === person.id ? response.data : ps))
-              )
-            )
+                persons.map((ps) =>
+                  ps.name === person.name ? response.data : ps
+                )
+              ),
+                setNewName(""),
+                setNewNumber("");
+            })
             .catch((error) => {
               setErrorMessage(
                 `Information on ${newObject.name} has been removed from the server`
@@ -50,16 +52,22 @@ const App = () => {
             })
         : "";
     } else {
-      create(newObject).then((response) =>
-        setPersons(persons.concat(response.data))
-      );
-      setPersons(persons.concat(newObject));
+      create(newObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+          setSuccessMessage(`${newObject.name} added`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
+        });
       setNewName("");
       setNewNumber("");
-      setSuccessMessage(`${newObject.name} added`);
-      setTimeout(() => {
-        setSuccessMessage(null); // clears the message
-      }, 3000);
     }
   };
 
