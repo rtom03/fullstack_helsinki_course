@@ -40,11 +40,13 @@ const App = () => {
               ),
                 setNewName(""),
                 setNewNumber("");
+              setSuccessMessage(`${newObject.name} added`);
+              setTimeout(() => {
+                setSuccessMessage(null);
+              }, 3000);
             })
             .catch((error) => {
-              setErrorMessage(
-                `Information on ${newObject.name} has been removed from the server`
-              );
+              setErrorMessage(error.message);
               console.log(error);
               setTimeout(() => {
                 setErrorMessage(null);
