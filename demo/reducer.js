@@ -12,10 +12,6 @@ function myReduce(array, callback, initialValue) {
 
   // Loop through array
   for (let i = startIndex; i < array.length; i++) {
-    console.log(`Step ${i}:`);
-    console.log("   Accumulator before:", accumulator);
-    console.log("   Current Value:", array[i]);
-
     accumulator = callback(accumulator, array[i], i, array);
 
     console.log("   Accumulator after:", accumulator);
