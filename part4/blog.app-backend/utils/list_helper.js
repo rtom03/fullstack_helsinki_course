@@ -16,7 +16,19 @@ const mostBlogs = (blogs) => {
   );
   return { author: top.author, blogs: top.blogs.length };
 };
-export { dummy, totalLikes, favouriteBlog, mostBlogs };
+
+const mostLikes = (blogs) => {
+  const top = blogs.reduce((prev, current) =>
+    current.blogs.map((bl) => bl.likes) > prev.blogs.map((bl) => bl.likes)
+      ? current
+      : prev
+  );
+  return {
+    author: top.author,
+    likes: Math.max(...top.blogs.map((bl) => bl.likes)),
+  };
+};
+export { dummy, totalLikes, favouriteBlog, mostBlogs, mostLikes };
 
 // const blogs = [
 //   {
@@ -26,7 +38,7 @@ export { dummy, totalLikes, favouriteBlog, mostBlogs };
 //         _id: "68a4b2b9107d3b764742a255",
 //         title: "Web Development",
 //         url: "http://localhost:8000/api-post",
-//         likes: 100,
+//         likes: 200,
 //         __v: 0,
 //       },
 //       {
@@ -65,4 +77,4 @@ export { dummy, totalLikes, favouriteBlog, mostBlogs };
 //     ],
 //   },
 // ];
-// console.log(mostBlogs(blogs));
+// console.log(mostLikes(blogs));
