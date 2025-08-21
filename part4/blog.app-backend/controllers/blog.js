@@ -4,28 +4,24 @@ import { error, info } from "../utils/logger.js";
 
 const blogRouter = express.Router();
 
-blogRouter.post("/", (req, res) => {
+blogRouter.post("/", async (req, res) => {
   const { title, author, url, likes } = req.body;
-
   const newBlog = new Blog({ title, author, url, likes });
-  newBlog
-    .save()
-    .then((blog) => {
-      res.json({ data: blog, message: info("New blog created successfully") });
-    })
-    .catch((err) => {
-      error(`an error occured while creating new blog: ${err}`);
-    });
+  await newBlog.save();
+  return res
+    .status(201)
+    .json({ data: newBlog, message: "New blog created successfully" });
 });
 
-blogRouter.get("/", (req, res) => {
-  Blog.find({})
-    .then((blog) => {
-      res.json(blog);
-    })
-    .catch((err) => {
-      error(`an error occured while fetching data: ${err}`);
-    });
+blogRouter.get("/", async (req, res) => {
+  try {
+    const blogs = await Blog.find({});
+    return res
+      .status(200)
+      .json({ data: blogs, message: "New blog created successfully" });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export { blogRouter };

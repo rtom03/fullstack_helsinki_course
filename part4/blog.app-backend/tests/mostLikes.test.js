@@ -51,7 +51,6 @@ describe("most likes", () => {
         ],
       },
     ];
-
     assert.deepStrictEqual(mostLikes(blogs), { author: "rtom", likes: 500 });
   });
 });
