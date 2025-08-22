@@ -6,6 +6,10 @@ const blogRouter = express.Router();
 
 blogRouter.post("/", async (req, res) => {
   const { title, author, url, likes } = req.body;
+
+  if (!title || !url) {
+    return res.status(400).json({ message: "title & url are required" });
+  }
   const newBlog = new Blog({ title, author, url, likes });
   await newBlog.save();
   return res
