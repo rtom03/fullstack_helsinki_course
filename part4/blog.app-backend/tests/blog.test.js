@@ -1,5 +1,5 @@
 import test, { after, beforeEach, describe } from "node:test";
-import assert from "node:assert";
+import assert, { strictEqual } from "node:assert";
 import { app } from "./../app.js";
 import supertest from "supertest";
 import { Blog } from "../models/Blog.js";
@@ -19,7 +19,6 @@ const data = [
     title: "Web Development",
     author: "rtom03",
     url: "http://localhost:8000/api-post",
-    likes: 100,
     __v: 0,
   },
 ];
@@ -37,7 +36,6 @@ const initialData = [
     _id: "68a4b2b9107d3b764742a255",
     title: "Mobile Development",
     author: "garland",
-    url: "http://localhost:8000/api-post",
     likes: 100,
     __v: 0,
   },
@@ -82,6 +80,29 @@ describe("blog handler", () => {
 
     const res = await Blog.find({});
     assert.strictEqual(res.length, initialData.length + 1);
+  });
+
+  test("verify likes default to 0", async () => {
+    const blog = new Blog(data[1]);
+    await blog.save();
+    api
+      .post("/api")
+      .send(blog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    console.log(blog.likes);
+    assert.strictEqual(blog.likes, 0);
+  });
+
+  test("validate input", async () => {
+    const blog = new Blog(data[1]);
+    await blog.save();
+    api
+      .post("/api")
+      .send(blog)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
   });
 
   after(async () => {
