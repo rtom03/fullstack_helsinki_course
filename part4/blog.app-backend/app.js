@@ -4,6 +4,7 @@ import { error, info, requestLogger } from "./utils/logger.js";
 import { MONGODB_URI } from "./utils/config.js";
 import { blogRouter } from "./controllers/blog.js";
 import { errorResponse, unknownEndpoint } from "./middleware/errorHandler.js";
+import { userRoutes } from "./controllers/user.js";
 
 const app = express();
 
@@ -19,6 +20,8 @@ mongoose
 app.use(express.json());
 
 app.use("/api", blogRouter);
+app.use("/api", userRoutes);
+
 app.use(requestLogger);
 app.use(unknownEndpoint);
 app.use(errorResponse);
