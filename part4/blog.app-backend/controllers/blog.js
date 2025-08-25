@@ -1,11 +1,14 @@
 import express from "express";
 import { Blog } from "../models/Blog.js";
 import { error, info } from "../utils/logger.js";
+import { User } from "../models/User.js";
 
 const blogRouter = express.Router();
 
 blogRouter.post("/", async (req, res) => {
   let { title, author, url, likes } = req.body;
+
+  const user = await User.findOne({});
 
   likes !== undefined ? Number(likes) : 0;
 
@@ -13,6 +16,7 @@ blogRouter.post("/", async (req, res) => {
     return res.status(400).json({ message: "title & url are required" });
   }
   const newBlog = new Blog({ title, author, url, likes });
+  newBlog.user = user.blogs.concat(user._id);
   await newBlog.save();
   return res
     .status(201)
