@@ -4,6 +4,7 @@ import { app } from "./../app.js";
 import supertest from "supertest";
 import { Blog } from "../models/Blog.js";
 import mongoose from "mongoose";
+import { tokenExtractor } from "../middleware/auth.middleware.js";
 
 const api = supertest(app);
 
@@ -23,7 +24,7 @@ describe("blog handler", () => {
     await newObject.save();
   });
 
-  test("return blog list", async () => {
+  test("return blog list", tokenExtractor, async () => {
     await api
       .get("/api")
       .expect(200)
@@ -38,7 +39,7 @@ describe("blog handler", () => {
     assert.strictEqual(Object.keys(json)[4], "id");
   });
 
-  test("make a post req", async () => {
+  test("make a post req", tokenExtractor, async () => {
     const newBlog = {
       title: "Linux Administrator",
       author: "Chris",
@@ -57,7 +58,7 @@ describe("blog handler", () => {
     assert.strictEqual(res.length, initialData.length + 1);
   });
 
-  test("verify likes default to 0", async () => {
+  test("verify likes default to 0", tokenExtractor, async () => {
     const newBlog = {
       title: "Development",
       author: "rtom",
@@ -74,7 +75,7 @@ describe("blog handler", () => {
     assert.strictEqual(res[1].likes, 0);
   });
 
-  test("validate input", async () => {
+  test("validate input", tokenExtractor, async () => {
     const newBlog = {
       title: "Development",
       author: "rtom",
@@ -86,14 +87,14 @@ describe("blog handler", () => {
       .expect("Content-Type", /application\/json/);
   });
 
-  test("delete blog", async () => {
+  test("delete blog", tokenExtractor, async () => {
     const blog = await Blog.find({});
     await api.delete(`/api/${blog[0].id}`).expect(204);
     const res = await Blog.find({});
     assert.strictEqual(res.length, 0);
   });
 
-  test("update blog likes", async () => {
+  test("update blog likes", tokenExtractor, async () => {
     let blog = await Blog.find({});
     // console.log(blog[0].likes);
     blog[0].likes += 1;
