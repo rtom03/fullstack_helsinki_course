@@ -5,6 +5,7 @@ import { MONGODB_URI } from "./utils/config.js";
 import { blogRouter } from "./controllers/blog.js";
 import { errorResponse, unknownEndpoint } from "./middleware/errorHandler.js";
 import { userRoutes } from "./controllers/user.js";
+import { tokenExtractor } from "./middleware/auth.middleware.js";
 
 const app = express();
 
@@ -19,8 +20,8 @@ mongoose
 
 app.use(express.json());
 
-app.use("/api", blogRouter);
 app.use("/api", userRoutes);
+app.use("/api", tokenExtractor, blogRouter);
 
 app.use(requestLogger);
 app.use(unknownEndpoint);
