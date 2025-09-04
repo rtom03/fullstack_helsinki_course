@@ -6,6 +6,7 @@ import { blogRouter } from "./controllers/blog.js";
 import { errorResponse, unknownEndpoint } from "./middleware/errorHandler.js";
 import { userRoutes } from "./controllers/user.js";
 import { tokenExtractor } from "./middleware/auth.middleware.js";
+import cors from "cors";
 
 const app = express();
 
@@ -19,9 +20,10 @@ mongoose
   });
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/api", userRoutes);
-app.use("/api", tokenExtractor, blogRouter);
+app.use("/api", blogRouter);
 
 app.use(requestLogger);
 app.use(unknownEndpoint);
