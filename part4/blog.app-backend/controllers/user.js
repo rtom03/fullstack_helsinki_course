@@ -47,7 +47,7 @@ userRoutes.post("/login", async (req, res) => {
   const token = jwt.sign(plainObject, process.env.JWT_SECRET);
   return res
     .status(200)
-    .json({ message: "User logged in successfully", token: token, data: user });
+    .json({ message: "User logged in successfully", token: token, user });
 });
 
 userRoutes.get("/users", async (req, res) => {
