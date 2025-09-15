@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
-import blogService, { baseUrl } from "./services/blogs";
+import { createBlog, baseUrl, getAll, setToken } from "./services/blogs";
 import axios from "axios";
 import ErrorNoti from "./components/ErrorNoti";
+import BlogForm from "./components/BlogForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const newObject = { title, author, url };
+  // const newObject = { title, author, url };
   const [message, setMessage] = useState("");
+  const [vissible, setVissible] = useState(true);
+  const [formData, setFormData] = useState({ title: "", author: "", url: "" });
+
+  const hideVissibility = { display: vissible ? "none" : "" };
+  const showVissibity = { display: vissible ? "" : "none" };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.data));
+    getAll().then((blogs) => setBlogs(blogs.data));
     // setMessage("New blog successfully posted");
   }, []);
 
@@ -34,7 +37,7 @@ const App = () => {
       }, 3000);
       window.localStorage.setItem("user", JSON.stringify(request.data));
       // console.log(user.name);
-      blogService.setToken(request.data.token);
+      setToken(request.data.token);
       setUsername("");
       setPassword("");
     } catch (error) {
@@ -53,7 +56,7 @@ const App = () => {
         const user = JSON.parse(loggedUser);
         // console.log(user.data.name);
         setUser(user);
-        blogService.setToken(user.token);
+        setToken(user.token);
       }
     } catch (error) {
       console.log(error);
@@ -63,16 +66,14 @@ const App = () => {
   const handleCreatePost = (e) => {
     e.preventDefault();
     try {
-      blogService.createBlog(newObject).then((response) => {
+      createBlog(formData).then((response) => {
         setBlogs((prevBlogs) => [...prevBlogs, response.data]);
         setMessage("New blog successfully posted");
         setTimeout(() => {
           setMessage("");
         }, 3000);
       });
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      setFormData({ title: "", author: "", url: "" });
     } catch (error) {
       console.log(error);
       setMessage(error);
@@ -84,6 +85,21 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("user");
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdateBlog = (updatedBlog) => {
+    setBlogs((prevBlogs) => {
+      const updatedList = prevBlogs.map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b
+      );
+      // sort by likes in descending order (most likes first)
+      return updatedList.sort((a, b) => b.likes - a.likes);
+    });
   };
 
   return (
@@ -100,6 +116,7 @@ const App = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </label>
+          <br />
           <label htmlFor="">
             Password
             <input
@@ -120,37 +137,23 @@ const App = () => {
         </div>
       )}
       <h2>blogs</h2>
-      <form onSubmit={handleCreatePost}>
-        <label>
-          title:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-        <label>
-          author
-          <input
-            type="text"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </label>
-        <label>
-          url:
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </label>
-        <button>submit</button>
-      </form>
+      <div style={showVissibity}>
+        <button onClick={() => setVissible(false)}>create new blog</button>
+      </div>
+      <div style={hideVissibility}>
+        <BlogForm
+          handleCreatePost={handleCreatePost}
+          title={formData.title}
+          author={formData.author}
+          url={formData.url}
+          handleChange={handleChange}
+        />
+      </div>
+      <button onClick={() => setVissible(true)}>cancel</button>
       {blogs.map((blog) => (
         <div key={blog.id || blog._id}>
           {/* <h1>{blog.url}</h1> */}
-          <Blog blog={blog} />
+          <Blog blog={blog} onUpdate={handleUpdateBlog} />
         </div>
       ))}
     </div>
