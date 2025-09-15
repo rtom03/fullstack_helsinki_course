@@ -55,7 +55,7 @@ blogRouter.get("/blogs", async (req, res) => {
   }
 });
 
-blogRouter.delete("/remove-blog/:id", tokenExtractor, async (req, res) => {
+blogRouter.delete("/delete-blog/:id", tokenExtractor, async (req, res) => {
   const decodedToken = req.decodedToken;
   const user = await User.findById(decodedToken.id).populate("blogs");
   let count = 0;
@@ -79,22 +79,27 @@ blogRouter.delete("/remove-blog/:id", tokenExtractor, async (req, res) => {
   }
 });
 
-blogRouter.put("/update-blog/:id", tokenExtractor, async (req, res) => {
-  const { likes } = req.body;
-  try {
-    const blog = await Blog.findById(req.params.id);
-    // console.log(blog);
-    if (!blog) {
-      return res.status(400).json({ error: "Blog not found" });
+blogRouter.put(
+  "/update-blog/:id",
+  // tokenExtractor,
+  async (req, res) => {
+    const { likes } = req.body;
+    try {
+      const blog = await Blog.findById(req.params.id);
+      // console.log(blog);
+      if (!blog) {
+        return res.status(400).json({ error: "Blog not found" });
+      }
+      blog.likes = Number(likes || 0) + 1;
+      await blog.save();
+      res.status(201).json({
+        message: `Liked ${blog.title} blog by ${blog.author}`,
+        data: blog,
+      });
+    } catch (error) {
+      console.log(error);
     }
-    blog.likes = Number(likes || 0) + 1;
-    await blog.save();
-    res
-      .status(201)
-      .json({ message: `Liked ${blog.title} blog by ${blog.author}` });
-  } catch (error) {
-    console.log(error);
   }
-});
+);
 
 export { blogRouter };
