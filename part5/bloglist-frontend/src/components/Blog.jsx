@@ -1,8 +1,8 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { deleteBlog, updateBlog } from "../services/blogs.js";
 
-const Blog = ({ blog, onUpdate }) => {
-  const [hide, setHide] = useState(true);
+const Blog = ({ blog, onUpdate, handleView, view }) => {
+  // const [hide, setHide] = useState(true);
   // const [likes, setLikes] = useState(0);
 
   const blogStyle = {
@@ -37,11 +37,11 @@ const Blog = ({ blog, onUpdate }) => {
     <div style={{ borderWidth: 1, border: "solid", marginBottom: 5 }}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <p>{blog.title}</p>
-        <button onClick={() => setHide(!hide)} style={{ height: 20 }}>
-          {hide ? "view" : "hide"}
+        <button onClick={handleView} style={{ height: 20 }} id="view">
+          {view ? "view" : "hide"}
         </button>
       </div>
-      <div style={hide ? blogHideStyle : blogStyle}>
+      <div style={view ? blogHideStyle : blogStyle}>
         <p>{blog.author}</p>
         <p>{blog.url}</p>
         <div style={{ display: "flex", alignItems: "center" }}>
