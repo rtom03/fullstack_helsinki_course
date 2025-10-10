@@ -10,10 +10,14 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  // const newObject = { title, author, url };
   const [message, setMessage] = useState("");
   const [vissible, setVissible] = useState(true);
   const [formData, setFormData] = useState({ title: "", author: "", url: "" });
+  const [hide, setHide] = useState({});
+
+  const handleView = (id) => {
+    setHide((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const hideVissibility = { display: vissible ? "none" : "" };
   const showVissibity = { display: vissible ? "" : "none" };
@@ -97,7 +101,6 @@ const App = () => {
       const updatedList = prevBlogs.map((b) =>
         b.id === updatedBlog.id ? updatedBlog : b
       );
-      // sort by likes in descending order (most likes first)
       return updatedList.sort((a, b) => b.likes - a.likes);
     });
   };
@@ -151,9 +154,14 @@ const App = () => {
       </div>
       <button onClick={() => setVissible(true)}>cancel</button>
       {blogs.map((blog) => (
-        <div key={blog.id || blog._id}>
+        <div key={blog.id}>
           {/* <h1>{blog.url}</h1> */}
-          <Blog blog={blog} onUpdate={handleUpdateBlog} />
+          <Blog
+            blog={blog}
+            onUpdate={handleUpdateBlog}
+            handleView={() => handleView(blog.id)}
+            view={!hide[blog.id]}
+          />
         </div>
       ))}
     </div>
