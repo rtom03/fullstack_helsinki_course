@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -19,10 +21,12 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "ADD_VOTE": {
-      const id = action.payload.id;
+const anecdotesSlice = createSlice({
+  name: "anecdotes",
+  initialState: [],
+  reducers: {
+    addVote(state, action) {
+      const id = action.payload;
       const voteAnecdote = state.find((x) => x.id === id);
       const changedAnecdotes = {
         ...voteAnecdote,
@@ -31,29 +35,43 @@ const reducer = (state = initialState, action) => {
       return [...state]
         .map((x) => (x.id === id ? changedAnecdotes : x))
         .sort((a, b) => b.votes - a.votes);
-    }
-    case "ADD_ANECDOTE": {
-      const content = action.payload.content;
-      const newAnecdote = { content: content, id: getId(), votes: 0 };
-      return state.concat(newAnecdote);
-    }
-    default: {
-      const highestVote = state.sort((a, b) => (b.votes > a.votes ? a : b));
-      return highestVote;
-    }
-  }
-};
+    },
 
-export const vote = (id) => {
-  return {
-    type: "ADD_VOTE",
-    payload: { id },
-  };
-};
-export const appendAnecdote = (content) => {
-  return {
-    type: "ADD_ANECDOTE",
-    payload: { content },
-  };
-};
-export default reducer;
+    addAnecdote(state, action) {
+      state.push(action.payload);
+    },
+
+    allAnecdotes(state, action) {
+      return action.payload;
+    },
+  },
+});
+
+const filterSlice = createSlice({
+  name: "filter",
+  initialState: "",
+  reducers: {
+    filterAnecdotes(state, action) {
+      const search = action.payload;
+      return (state = search);
+    },
+  },
+});
+
+const notiSlice = createSlice({
+  name: "noti",
+  initialState: [],
+  reducers: {
+    notification(state, action) {
+      return [action.payload];
+    },
+  },
+});
+
+export const anecdotesReducer = anecdotesSlice.reducer;
+export const filterReducer = filterSlice.reducer;
+export const notificationReducer = notiSlice.reducer;
+
+export const { filterAnecdotes } = filterSlice.actions;
+export const { notification } = notiSlice.actions;
+export const { addVote, addAnecdote, allAnecdotes } = anecdotesSlice.actions;
