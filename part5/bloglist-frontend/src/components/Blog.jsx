@@ -1,36 +1,12 @@
 // import { useState } from "react";
-import { deleteBlog, updateBlog } from "../services/blogs.js";
 
-const Blog = ({ blog, onUpdate, handleView, view }) => {
-  // const [hide, setHide] = useState(true);
-  // const [likes, setLikes] = useState(0);
-
+const Blog = ({ blog, handleLikes, handleRemove, handleView, view }) => {
   const blogStyle = {
     paddingLeft: 2,
   };
 
   const blogHideStyle = {
     display: "none",
-  };
-
-  const handleLikes = () => {
-    try {
-      const updateLike = { likes: blog.likes++ };
-      updateBlog(blog.id, updateLike).then((response) => {
-        onUpdate(response.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleRemove = () => {
-    try {
-      window.confirm("are you sure you want to delete this item?");
-      deleteBlog(blog.id).then((response) => response.data);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (

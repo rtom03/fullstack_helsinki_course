@@ -1,9 +1,9 @@
-const BlogForm = ({ handleCreatePost, title, author, url, handleChange }) => {
+const BlogForm = ({ handleCreatePost, handleChange, title, author, url }) => {
   return (
     <div>
       <form onSubmit={handleCreatePost}>
         <label>
-          title:
+          title
           <input
             type="text"
             name="title"

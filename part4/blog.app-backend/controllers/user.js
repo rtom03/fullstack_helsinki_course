@@ -9,20 +9,24 @@ const userRoutes = express.Router();
 
 userRoutes.post("/register", async (req, res) => {
   const { name, username, password } = req.body;
-  const salt = await bcrypt.genSalt(10);
-  if (password.length < 3) {
-    return res.status(400).json({ message: "Password must at least 3" });
+  try {
+    const salt = await bcrypt.genSalt(10);
+    if (password.length < 3) {
+      return res.status(400).json({ message: "Password must at least 3" });
+    }
+    const hashPassword = await bcrypt.hash(password, salt);
+    const newUser = new User({
+      name,
+      username,
+      password: hashPassword,
+    });
+    await newUser.save();
+    return res
+      .status(201)
+      .json({ message: "new user created successfully", data: newUser });
+  } catch (error) {
+    console.log(error);
   }
-  const hashPassword = await bcrypt.hash(password, salt);
-  const newUser = new User({
-    name,
-    username,
-    password: hashPassword,
-  });
-  await newUser.save();
-  return res
-    .status(201)
-    .json({ message: "new user created successfully", data: newUser });
 });
 
 userRoutes.post("/login", async (req, res) => {
