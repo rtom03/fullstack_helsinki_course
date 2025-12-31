@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
-import { createBlog, baseUrl, getAll, setToken } from "./services/blogs";
+import {
+  baseUrl,
+  createBlog,
+  deleteBlog,
+  getAll,
+  setToken,
+  updateBlog,
+} from "./services/blogs";
 import axios from "axios";
 import ErrorNoti from "./components/ErrorNoti";
 import BlogForm from "./components/BlogForm";
+import SuccessNoti from "./components/SuccessNoti";
+import Togglable from "./components/Togglable";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,16 +21,12 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
-  const [vissible, setVissible] = useState(true);
-  const [formData, setFormData] = useState({ title: "", author: "", url: "" });
   const [hide, setHide] = useState({});
+  const [formData, setFormData] = useState({ title: "", author: "", url: "" });
 
   const handleView = (id) => {
     setHide((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
-  const hideVissibility = { display: vissible ? "none" : "" };
-  const showVissibity = { display: vissible ? "" : "none" };
 
   useEffect(() => {
     getAll().then((blogs) => setBlogs(blogs.data));
@@ -67,6 +73,43 @@ const App = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("user");
+  };
+
+  const handleLikes = (blog) => {
+    try {
+      const updateLike = { likes: blog.likes++ };
+      updateBlog(blog.id, updateLike).then((response) => {
+        handleUpdateBlog(response.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemove = (blog) => {
+    try {
+      window.confirm("are you sure you want to delete this item?");
+      deleteBlog(blog.id).then((response) => response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateBlog = (updatedBlog) => {
+    setBlogs((prevBlogs) => {
+      const updatedList = prevBlogs.map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b
+      );
+      return updatedList.sort((a, b) => b.likes - a.likes);
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
   const handleCreatePost = (e) => {
     e.preventDefault();
     try {
@@ -87,78 +130,44 @@ const App = () => {
     }
   };
 
-  const handleLogout = () => {
-    window.localStorage.removeItem("user");
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleUpdateBlog = (updatedBlog) => {
-    setBlogs((prevBlogs) => {
-      const updatedList = prevBlogs.map((b) =>
-        b.id === updatedBlog.id ? updatedBlog : b
-      );
-      return updatedList.sort((a, b) => b.likes - a.likes);
-    });
-  };
-
   return (
     <div>
-      {message && <ErrorNoti message={message} />}
-
+      {message && <SuccessNoti message={message} />}
       {!user && (
-        <form onSubmit={handleLogin}>
-          <label htmlFor="">
-            Username
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-          <br />
-          <label htmlFor="">
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <button type="submits">login</button>
-        </form>
+        <LoginForm
+          handleLogin={handleLogin}
+          setUsername={setUsername}
+          username={username}
+          setPassword={setPassword}
+          password={password}
+        />
       )}
-
       {user && (
         <div>
-          <button onClick={() => console.log(user.token)}>click</button>
           <p>{user.user.name || "user"} logged in</p>
           <button onClick={handleLogout}>logout</button>
         </div>
       )}
       <h2>blogs</h2>
-      <div style={showVissibity}>
-        <button onClick={() => setVissible(false)}>create new blog</button>
-      </div>
-      <div style={hideVissibility}>
+      <Togglable>
         <BlogForm
+          handleChange={handleChange}
           handleCreatePost={handleCreatePost}
           title={formData.title}
           author={formData.author}
           url={formData.url}
-          handleChange={handleChange}
         />
-      </div>
-      <button onClick={() => setVissible(true)}>cancel</button>
+      </Togglable>
       {blogs.map((blog) => (
         <div key={blog.id}>
-          {/* <h1>{blog.url}</h1> */}
           <Blog
             blog={blog}
-            onUpdate={handleUpdateBlog}
+            handleLikes={() => {
+              handleLikes(blog);
+            }}
+            handleRemove={() => {
+              handleRemove(blog);
+            }}
             handleView={() => handleView(blog.id)}
             view={!hide[blog.id]}
           />
