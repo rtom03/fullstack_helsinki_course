@@ -18,7 +18,7 @@ describe("Blog app", () => {
     await expect(page.getByText("Password")).toBeVisible();
   });
   describe("Login", () => {
-    test("succeeds with correct credentials", async ({ page }) => {
+    test.only("succeeds with correct credentials", async ({ page }) => {
       // ...
       //   await page.getByLabel("Username").fill("jd");
       //   await page.getByLabel("Password").fill("12345678");
@@ -62,47 +62,44 @@ describe("Blog app", () => {
     });
   });
 
-  describe("Can be liked && can be delete", () => {
-    for (let i = 0; i < 2; i++) {
-      if (i == 0) {
-        beforeEach(async ({ page }) => {
-          // ...
-          const input = await page.getByRole("textbox").all();
-          await input[0].fill("jane");
-          await input[1].fill("12345678");
-          await page.getByRole("button", { name: "login" }).click();
+  // describe("Can be liked && can be delete", () => {
+  //   for (let i = 0; i < 2; i++) {
+  //     if (i == 0) {
+  //       beforeEach(async ({ page }) => {
+  //         // ...
+  //         const input = await page.getByRole("textbox").all();
+  //         await input[0].fill("jane");
+  //         await input[1].fill("12345678");
+  //         await page.getByRole("button", { name: "login" }).click();
 
-          await page.getByRole("button", { name: "Create Blog" }).click();
-          // ...
-          await page.getByLabel("title").fill("Meta");
-          await page.getByLabel("author").fill("Facebook");
-          await page.getByLabel("url").fill("Facebook");
-          await page.getByRole("button", { name: "submit" }).click();
-          // await input[2].fill("Facebook");
-          await expect(page.getByText("Meta")).toBeVisible();
-        });
-        test.only("blog can be liked", async ({ page }) => {
-          await page.getByRole("button", { name: "view" }).click();
-          await page.getByRole("button", { name: "like" }).click();
-          await expect(page.getByText("1")).toBeVisible();
-        });
-      }
-      test.only("blog can be deleted", async ({ page }) => {
-        await page.getByRole("button", { name: "view" }).click();
-        await page.getByRole("button", { name: "remove" }).click();
-        page.on("dialog", async (dialog) => {
-          expect(dialog.type()).toBe("confirm");
-          expect(dialog.message()).toBe(
-            "are you sure you want to delete this item?"
-          );
-          await dialog.accept(); // Clicks 'OK'
-        });
-
-        // Action that triggers the alert (e.g., clicking a button)
-        await page.getByRole("button", { name: "OK" }).click();
-
-        await expect(page.getByText("Meta")).toBeHidden();
-      });
-    }
-  });
+  //         await page.getByRole("button", { name: "Create Blog" }).click();
+  //         // ...
+  //         await page.getByLabel("title").fill("Meta");
+  //         await page.getByLabel("author").fill("Facebook");
+  //         await page.getByLabel("url").fill("Facebook");
+  //         await page.getByRole("button", { name: "submit" }).click();
+  //         // await input[2].fill("Facebook");
+  //         await expect(page.getByText("Meta")).toBeVisible();
+  //       });
+  //       test("blog can be liked", async ({ page }) => {
+  //         await page.getByRole("button", { name: "view" }).click();
+  //         await page.getByRole("button", { name: "like" }).click();
+  //         await expect(page.getByText("1")).toBeVisible();
+  //       });
+  //     }
+  //     test("blog can be deleted", async ({ page }) => {
+  //       await page.getByRole("button", { name: "view" }).click();
+  //       await page.getByRole("button", { name: "remove" }).click();
+  //       page.on("dialog", async (dialog) => {
+  //         expect(dialog.type()).toBe("confirm");
+  //         expect(dialog.message()).toBe(
+  //           "are you sure you want to delete this item?"
+  //         );
+  //         await dialog.accept(); // Clicks 'OK'
+  //       });
+  //       await page.getByRole("button", { name: "OK" }).click();
+  //       await expect(page.getByText("Meta")).toBeHidden();
+  //     });
+  //   }
+  // });
 });
