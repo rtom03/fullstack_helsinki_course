@@ -7,6 +7,10 @@ import { errorResponse, unknownEndpoint } from "./middleware/errorHandler.js";
 import { userRoutes } from "./controllers/user.js";
 import cors from "cors";
 import { testRoutes } from "./controllers/test.js";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
+dotenv.config();
 
 const app = express();
 
@@ -20,8 +24,15 @@ mongoose
   });
 
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    credentials: true,
+  })
+);
 app.use("/api", userRoutes);
 app.use("/api", blogRouter);
 
