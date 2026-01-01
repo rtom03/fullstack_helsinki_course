@@ -5,8 +5,8 @@ import { MONGODB_URI } from "./utils/config.js";
 import { blogRouter } from "./controllers/blog.js";
 import { errorResponse, unknownEndpoint } from "./middleware/errorHandler.js";
 import { userRoutes } from "./controllers/user.js";
-import { tokenExtractor } from "./middleware/auth.middleware.js";
 import cors from "cors";
+import { testRoutes } from "./controllers/test.js";
 
 const app = express();
 
@@ -24,6 +24,10 @@ app.use(cors());
 
 app.use("/api", userRoutes);
 app.use("/api", blogRouter);
+
+if (process.env.NODE_ENV === "test") {
+  app.use("/api", testRoutes);
+}
 
 app.use(requestLogger);
 app.use(unknownEndpoint);

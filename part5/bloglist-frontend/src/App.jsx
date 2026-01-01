@@ -91,9 +91,17 @@ const App = () => {
   const handleRemove = (blog) => {
     try {
       window.confirm("are you sure you want to delete this item?");
-      deleteBlog(blog.id).then((response) => response.data);
+      deleteBlog(blog.id).then((response) => handleUpdateBlog(response.data));
+      setMessage("Item deleted successfully");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       console.log(error);
+      setMessage("an error occured while deleting item");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     }
   };
 
@@ -146,33 +154,35 @@ const App = () => {
         <div>
           <p>{user.user.name || "user"} logged in</p>
           <button onClick={handleLogout}>logout</button>
+          <div>
+            <h2>blogs</h2>
+            <Togglable>
+              <BlogForm
+                handleChange={handleChange}
+                handleCreatePost={handleCreatePost}
+                title={formData.title}
+                author={formData.author}
+                url={formData.url}
+              />
+            </Togglable>
+            {blogs.map((blog) => (
+              <div key={blog.id}>
+                <Blog
+                  blog={blog}
+                  handleLikes={() => {
+                    handleLikes(blog);
+                  }}
+                  handleRemove={() => {
+                    handleRemove(blog);
+                  }}
+                  handleView={() => handleView(blog.id)}
+                  view={!hide[blog.id]}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       )}
-      <h2>blogs</h2>
-      <Togglable>
-        <BlogForm
-          handleChange={handleChange}
-          handleCreatePost={handleCreatePost}
-          title={formData.title}
-          author={formData.author}
-          url={formData.url}
-        />
-      </Togglable>
-      {blogs.map((blog) => (
-        <div key={blog.id}>
-          <Blog
-            blog={blog}
-            handleLikes={() => {
-              handleLikes(blog);
-            }}
-            handleRemove={() => {
-              handleRemove(blog);
-            }}
-            handleView={() => handleView(blog.id)}
-            view={!hide[blog.id]}
-          />
-        </div>
-      ))}
     </div>
   );
 };
