@@ -13,7 +13,7 @@ const blogRouter = express.Router();
 blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
   let { title, author, url, likes } = req.body;
   const decodedToken = req.decodedToken;
-  // console.log("DECODED TOKEN:", decodedToken);
+  console.log("DECODED TOKEN:", decodedToken);
   likes !== undefined ? Number(likes) : 0;
   try {
     if (!decodedToken.userId) {
@@ -22,7 +22,7 @@ blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
       return res.status(400).json({ message: "title & url are required" });
     }
     const user = await User.findById(decodedToken.userId);
-    // console.log(user);
+    console.log(user);
     const newBlog = new Blog({
       title,
       author,
@@ -63,12 +63,12 @@ blogRouter.delete("/delete-blog/:id", tokenExtractor, async (req, res) => {
   const decodedToken = req.decodedToken;
   const user = await User.findById(decodedToken.userId).populate("blogs");
   let idx = 0;
-  // console.log(user);
+  console.log(user);
   try {
     if (!decodedToken.userId) {
       return res.status(400).json({ message: "Unauthorize user" });
     } else if (decodedToken.userId)
-      while (user.blogs[idx]._id.toString() !== blogId) {
+      while (user.blogs.length && user.blogs[idx]._id.toString() !== blogId) {
         idx++;
         if (idx === user.blogs.length) {
           return res.status(400).json({

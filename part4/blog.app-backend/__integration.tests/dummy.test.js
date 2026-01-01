@@ -1,6 +1,6 @@
 import { test, describe } from "node:test";
 import assert from "node:assert";
-import { dummy } from "../utils/list_helper.js";
+import { dummy } from "../blog.app-backend/utils/list_helper.js";
 
 describe("dummy test", () => {
   test("of one value is the value itself", () => {
