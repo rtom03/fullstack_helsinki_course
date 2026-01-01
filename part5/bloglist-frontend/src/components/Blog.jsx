@@ -21,7 +21,7 @@ const Blog = ({ blog, handleLikes, handleRemove, handleView, view }) => {
         <p>{blog.author}</p>
         <p>{blog.url}</p>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <button onClick={handleLikes}>likes</button>
+          <button onClick={handleLikes}>like</button>
           <p>{blog.likes}</p>
         </div>
         <button style={{ backgroundColor: "red" }} onClick={handleRemove}>

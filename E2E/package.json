@@ -1,18 +1,17 @@
 {
   "name": "e2e",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:report": "playwright show-report",
-    "start:test": "cross-env NODE_ENV=test node --watch index.js"
+    "test": "playwright test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
-    "@types/node": "^24.5.0"
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3"
   }
 }
