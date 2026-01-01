@@ -1,6 +1,6 @@
 import test, { after, afterEach, beforeEach, describe } from "node:test";
 import assert from "node:assert";
-import { app } from "./../app.js";
+import { app } from "../app.js";
 import supertest from "supertest";
 import mongoose from "mongoose";
 import { User } from "../models/User.js";
