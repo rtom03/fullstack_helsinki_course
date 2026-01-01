@@ -16,19 +16,19 @@ blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
   // console.log("DECODED TOKEN:", decodedToken);
   likes !== undefined ? Number(likes) : 0;
   try {
-    if (!decodedToken.id) {
+    if (!decodedToken.userId) {
       return res.status(400).json({ message: "Invalid token" });
     } else if (!title || !url) {
       return res.status(400).json({ message: "title & url are required" });
     }
-    const user = await User.findById(decodedToken.id);
+    const user = await User.findById(decodedToken.userId);
     // console.log(user);
     const newBlog = new Blog({
       title,
       author,
       url,
       likes,
-      user: decodedToken.id,
+      user: decodedToken.userId,
     });
     const savedBlog = await newBlog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
@@ -37,7 +37,8 @@ blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
       .status(201)
       .json({ data: newBlog, message: "New blog created successfully" });
   } catch (error) {
-    res.status(500).json({
+    console.log(error);
+    return res.status(500).json({
       data: error,
       message: "an error occured while creating post... please try again",
     });
@@ -56,23 +57,24 @@ blogRouter.get("/blogs", async (req, res) => {
 });
 
 blogRouter.delete("/delete-blog/:id", tokenExtractor, async (req, res) => {
+  const blogId = req.params.id;
   const decodedToken = req.decodedToken;
-  const user = await User.findById(decodedToken.id).populate("blogs");
-  let count = 0;
-  // console.log(user.blogs[1]._id.toString(), req.params.id);
+  const user = await User.findById(decodedToken.userId).populate("blogs");
+  let idx = 0;
+  // console.log(user);
   try {
-    if (!decodedToken.id) {
-      return res.status(400).json({ message: "Invalid token" });
-    } else if (decodedToken.id)
-      while (user.blogs[count]._id.toString() !== req.params.id) {
-        count++;
-        if (count === user.blogs.length) {
+    if (!decodedToken.userId) {
+      return res.status(400).json({ message: "Unauthorize user" });
+    } else if (decodedToken.userId)
+      while (user.blogs[idx]._id.toString() !== blogId) {
+        idx++;
+        if (idx === user.blogs.length) {
           return res.status(400).json({
             message: "not found or you're not authorize to delete this data",
           });
         }
       }
-    await Blog.findByIdAndDelete(req.params.id);
+    await Blog.findByIdAndDelete(blogId);
     return res.status(204).json({ message: "deleted successfully" });
   } catch (error) {
     console.log(error);

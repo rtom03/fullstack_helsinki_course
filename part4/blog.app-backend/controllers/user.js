@@ -1,9 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/User.js";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Blog } from "../models/Blog.js";
+import { createJwt } from "../utils/config.js";
 
 dotenv.config();
 const userRoutes = express.Router();
@@ -33,26 +32,16 @@ userRoutes.post("/register", async (req, res) => {
 userRoutes.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
-  if (!user) {
-    return res.status(400).json({ message: "User not found" });
-  }
   const verifyPassword = await bcrypt.compare(password, user.password);
-  if (!verifyPassword) {
+
+  if (!user) return res.status(400).json({ message: "User not found" });
+  if (!verifyPassword)
     return res
       .status(400)
       .json({ message: "Password or username is incorrect" });
-  }
-  // console.log(user);
-  const plainObject = {
-    username: user.username,
-    name: user.name,
-    id: user._id,
-  };
-  // console.log(plainObject);
-  const token = jwt.sign(plainObject, process.env.JWT_SECRET);
-  return res
-    .status(200)
-    .json({ message: "User logged in successfully", token: token, user });
+  console.log(user._id.toString());
+  createJwt(res, user._id);
+  return res.status(200).json({ message: "User logged in successfully", user });
 });
 
 userRoutes.get("/users", async (req, res) => {
