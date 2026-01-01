@@ -33,9 +33,11 @@ blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
     const savedBlog = await newBlog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
-    return res
-      .status(201)
-      .json({ data: newBlog, message: "New blog created successfully" });
+    return res.status(201).json({
+      data: newBlog,
+      decodedToken,
+      message: "New blog created successfully",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

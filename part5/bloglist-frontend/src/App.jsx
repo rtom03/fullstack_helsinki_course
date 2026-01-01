@@ -36,18 +36,22 @@ const App = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const request = await axios.post(`${baseUrl}/login`, {
-        username,
-        password,
-      });
-      setUser(request.data);
-      setMessage(request.data.message);
+      const response = await axios.post(
+        `${baseUrl}/login`,
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
+      console.log(response);
+      setUser(response.data);
+      setMessage(response.data.message);
       setTimeout(() => {
         setMessage("");
       }, 3000);
-      window.localStorage.setItem("user", JSON.stringify(request.data));
+      window.localStorage.setItem("user", JSON.stringify(response.data));
       // console.log(user.name);
-      setToken(request.data.token);
       setUsername("");
       setPassword("");
     } catch (error) {
@@ -64,9 +68,7 @@ const App = () => {
       const loggedUser = window.localStorage.getItem("user");
       if (loggedUser) {
         const user = JSON.parse(loggedUser);
-        // console.log(user.data.name);
         setUser(user);
-        setToken(user.token);
       }
     } catch (error) {
       console.log(error);
@@ -91,7 +93,9 @@ const App = () => {
   const handleRemove = (blog) => {
     try {
       window.confirm("are you sure you want to delete this item?");
-      deleteBlog(blog.id).then((response) => handleUpdateBlog(response.data));
+      deleteBlog(blog.id)
+        .then(() => getAll())
+        .then((blogs) => setBlogs(blogs.data));
       setMessage("Item deleted successfully");
       setTimeout(() => {
         setMessage("");

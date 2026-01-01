@@ -39,9 +39,11 @@ userRoutes.post("/login", async (req, res) => {
     return res
       .status(400)
       .json({ message: "Password or username is incorrect" });
-  console.log(user._id.toString());
-  createJwt(res, user._id);
-  return res.status(200).json({ message: "User logged in successfully", user });
+  const token = createJwt(res, user._id);
+
+  return res
+    .status(200)
+    .json({ message: "User logged in successfully", user, token });
 });
 
 userRoutes.get("/users", async (req, res) => {

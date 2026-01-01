@@ -21,6 +21,8 @@ const createJwt = (res, userId) => {
     sameSite: "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000,
   });
+
+  return token;
 };
 
 export { MONGODB_URI, PORT, createJwt };

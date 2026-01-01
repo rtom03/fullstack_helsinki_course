@@ -3,7 +3,7 @@ export const baseUrl = "http://localhost:8000/api";
 
 let token = null;
 const setToken = (newToken) => {
-  token = `Bearer ${newToken}`;
+  token = newToken;
   return newToken;
 };
 
@@ -13,10 +13,9 @@ const getAll = async () => {
 };
 
 const createBlog = (newObject) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-  const request = axios.post(`${baseUrl}/create-blog`, newObject, config);
+  const request = axios.post(`${baseUrl}/create-blog`, newObject, {
+    withCredentials: true,
+  });
   return request.then((response) => response.data);
 };
 
@@ -26,10 +25,9 @@ const updateBlog = (id, newObject) => {
 };
 
 const deleteBlog = (id) => {
-  const config = {
-    headers: { Authorization: token },
-  };
-  const request = axios.delete(`${baseUrl}/delete-blog/${id}`, config);
+  const request = axios.delete(`${baseUrl}/delete-blog/${id}`, {
+    withCredentials: true,
+  });
   return request.then((response) => response.data);
 };
 
