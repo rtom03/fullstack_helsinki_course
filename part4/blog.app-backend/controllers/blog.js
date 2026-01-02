@@ -2,7 +2,6 @@ import express from "express";
 import { Blog } from "../models/Blog.js";
 import { error, info } from "../utils/logger.js";
 import { User } from "../models/User.js";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { tokenExtractor } from "../middleware/auth.middleware.js";
 
@@ -10,10 +9,13 @@ dotenv.config();
 
 const blogRouter = express.Router();
 
+const env = process.env.NODE_ENV;
+
 blogRouter.post("/create-blog", tokenExtractor, async (req, res) => {
   let { title, author, url, likes } = req.body;
   const decodedToken = req.decodedToken;
-  console.log("DECODED TOKEN:", decodedToken);
+
+  console.log("DECODED TOKEN>>>:", token);
   likes !== undefined ? Number(likes) : 0;
   try {
     if (!decodedToken.userId) {
@@ -63,12 +65,15 @@ blogRouter.delete("/delete-blog/:id", tokenExtractor, async (req, res) => {
   const decodedToken = req.decodedToken;
   const user = await User.findById(decodedToken.userId).populate("blogs");
   let idx = 0;
-  console.log(user);
+  console.log(user.blogs.length);
   try {
     if (!decodedToken.userId) {
       return res.status(400).json({ message: "Unauthorize user" });
     } else if (decodedToken.userId)
-      while (user.blogs.length && user.blogs[idx]._id.toString() !== blogId) {
+      while (
+        user.blogs.length !== 0 &&
+        user.blogs[idx]._id.toString() !== blogId
+      ) {
         idx++;
         if (idx === user.blogs.length) {
           return res.status(400).json({
@@ -106,4 +111,5 @@ blogRouter.put(
   }
 );
 
+/// blog routes for test
 export { blogRouter };

@@ -5,7 +5,6 @@ import {
   createBlog,
   deleteBlog,
   getAll,
-  setToken,
   updateBlog,
 } from "./services/blogs";
 import axios from "axios";
@@ -32,7 +31,17 @@ const App = () => {
     getAll().then((blogs) => setBlogs(blogs.data));
     // setMessage("New blog successfully posted");
   }, []);
-
+  useEffect(() => {
+    try {
+      const loggedUser = window.localStorage.getItem("user");
+      if (loggedUser) {
+        const user = JSON.parse(loggedUser);
+        setUser(user);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -62,18 +71,6 @@ const App = () => {
       }, 3000);
     }
   };
-
-  useEffect(() => {
-    try {
-      const loggedUser = window.localStorage.getItem("user");
-      if (loggedUser) {
-        const user = JSON.parse(loggedUser);
-        setUser(user);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   const handleLogout = () => {
     window.localStorage.removeItem("user");

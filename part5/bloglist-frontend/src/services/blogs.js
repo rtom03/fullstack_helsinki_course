@@ -1,11 +1,11 @@
 import axios from "axios";
 export const baseUrl = "http://localhost:8000/api";
 
-let token = null;
-const setToken = (newToken) => {
-  token = newToken;
-  return newToken;
-};
+// let token = null;
+// const setToken = (newToken) => {
+//   token = newToken;
+//   return newToken;
+// };
 
 const getAll = async () => {
   const request = axios.get(`${baseUrl}/blogs`);
@@ -31,4 +31,10 @@ const deleteBlog = (id) => {
   return request.then((response) => response.data);
 };
 
-export { getAll, createBlog, setToken, updateBlog, deleteBlog };
+export {
+  getAll,
+  createBlog,
+  // setToken,
+  updateBlog,
+  deleteBlog,
+};

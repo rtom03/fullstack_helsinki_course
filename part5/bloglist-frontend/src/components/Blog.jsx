@@ -9,6 +9,9 @@ const Blog = ({ blog, handleLikes, handleRemove, handleView, view }) => {
     display: "none",
   };
 
+  const userString = localStorage.getItem("user");
+  const user = JSON.parse(userString);
+  // console.log(user.user);
   return (
     <div style={{ borderWidth: 1, border: "solid", marginBottom: 5 }}>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -24,9 +27,11 @@ const Blog = ({ blog, handleLikes, handleRemove, handleView, view }) => {
           <button onClick={handleLikes}>like</button>
           <p>{blog.likes}</p>
         </div>
-        <button style={{ backgroundColor: "red" }} onClick={handleRemove}>
-          remove
-        </button>
+        {user.user.id === blog.user && (
+          <button style={{ backgroundColor: "red" }} onClick={handleRemove}>
+            remove
+          </button>
+        )}
       </div>
     </div>
   );
