@@ -10,6 +10,7 @@ describe("Blog app", () => {
         password: "12345678",
       },
     });
+
     await page.goto("http://localhost:5173");
   });
 
@@ -81,13 +82,13 @@ describe("Blog app", () => {
           // await input[2].fill("Facebook");
           await expect(page.getByText("Meta")).toBeVisible();
         });
-        test.only("blog can be liked", async ({ page }) => {
+        test("blog can be liked", async ({ page }) => {
           await page.getByRole("button", { name: "view" }).click();
           await page.getByRole("button", { name: "like" }).click();
           await expect(page.getByText("1")).toBeVisible();
         });
       }
-      test.only("blog can be deleted", async ({ page }) => {
+      test("blog can be deleted", async ({ page }) => {
         await page.getByRole("button", { name: "view" }).click();
         await page.getByRole("button", { name: "remove" }).click();
 
@@ -102,5 +103,32 @@ describe("Blog app", () => {
         await expect(page.getByText("Meta")).toBeHidden();
       });
     }
+  });
+
+  describe("Del is delegated to ownership", async () => {
+    beforeEach(async ({ request }) => {
+      await request.post("http://localhost:8000/api/register", {
+        data: {
+          name: "Jack Mill",
+          username: "jack",
+          password: "12345678",
+        },
+      });
+    });
+    test.only("Check remove invisible", async ({ page }) => {
+      console.log(process.env.JWT_SECRET);
+
+      const input = await page.getByRole("textbox").all();
+      await input[0].fill("jack");
+      await input[1].fill("12345678");
+      const loginBtn = page.getByRole("button", { name: "login" });
+      await loginBtn.click();
+      await expect(page.getByText("blogs")).toBeVisible();
+
+      // await page.pause();
+
+      // await page.getByRole("button", { name: "view" }).click();
+      // await expect(page.getByRole("button", { name: "remove" })).toBeHidden();
+    });
   });
 });

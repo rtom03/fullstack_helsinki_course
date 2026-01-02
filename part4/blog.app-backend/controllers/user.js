@@ -12,7 +12,7 @@ userRoutes.post("/register", async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
     if (password.length < 3) {
-      return res.status(400).json({ message: "Password must at least 3" });
+      return res.status(400).json({ message: "Password must be at least 3" });
     }
     const hashPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
@@ -21,6 +21,7 @@ userRoutes.post("/register", async (req, res) => {
       password: hashPassword,
     });
     await newUser.save();
+    // createJwt(res, newUser._id);
     return res
       .status(201)
       .json({ message: "new user created successfully", data: newUser });
@@ -31,16 +32,14 @@ userRoutes.post("/register", async (req, res) => {
 
 userRoutes.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  const verifyPassword = await bcrypt.compare(password, user.password);
-
+  const user = await User.findOne({ username }).populate("blogs");
   if (!user) return res.status(400).json({ message: "User not found" });
+  const verifyPassword = await bcrypt.compare(password, user.password);
   if (!verifyPassword)
     return res
       .status(400)
       .json({ message: "Password or username is incorrect" });
   const token = createJwt(res, user._id);
-
   return res
     .status(200)
     .json({ message: "User logged in successfully", user, token });
