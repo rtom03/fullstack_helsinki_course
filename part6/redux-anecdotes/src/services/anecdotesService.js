@@ -2,14 +2,13 @@ const baseUrl = "http://localhost:3001/anecdotes";
 
 const getAnecdotes = async () => {
   const response = await fetch(baseUrl);
-
   if (!response.ok) {
     throw new Error();
   }
   return await response.json();
 };
 
-const createNew = async (content) => {
+const createNew = async (content, id) => {
   const response = await fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
