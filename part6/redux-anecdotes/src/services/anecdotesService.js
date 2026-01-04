@@ -8,7 +8,7 @@ const getAnecdotes = async () => {
   return await response.json();
 };
 
-const createNew = async (content, id) => {
+const createNew = async (content) => {
   const response = await fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

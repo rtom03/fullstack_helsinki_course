@@ -4,11 +4,7 @@ import { addVote } from "../reducers/anecdoteReducer";
 const AnecdoteList = () => {
   const anecdotesList = useSelector(({ anecdotes, filter }) => {
     if (filter) {
-      return anecdotes.filter((x) =>
-        filter.Capitalized()
-          ? x.content.includes(filter.Capitalized())
-          : x.content.includes(filter)
-      );
+      return anecdotes.filter((x) => x.content.includes(filter));
     }
     return anecdotes;
   });
