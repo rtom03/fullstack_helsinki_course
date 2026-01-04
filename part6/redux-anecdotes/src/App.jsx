@@ -8,17 +8,17 @@ import { useDispatch } from "react-redux";
 import { allAnecdotes } from "./reducers/anecdoteReducer";
 
 const App = () => {
-  const dispatch = useDispatch()
-  
-  useEffect(()=>{
-    getAnecdotes().then((res)=>dispatch(allAnecdotes(res)))
-  },[dispatch])
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getAnecdotes().then((res) => dispatch(allAnecdotes(res)));
+  }, [dispatch]);
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      <Notification/>
-      <AnecdoteFiltering/>
+      <Notification />
+      <AnecdoteFiltering />
       <AnecdoteList />
       <AnecdotesForm />
     </div>

@@ -1,16 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addVote} from "../reducers/anecdoteReducer";
+import { addVote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = () => {
-  const anecdotesList = useSelector(({anecdotes,filter}) => {
-    if(filter){
-     return  anecdotes.filter((x)=>x.content.includes(filter))
+  const anecdotesList = useSelector(({ anecdotes, filter }) => {
+    if (filter) {
+      return anecdotes.filter((x) => x.content.includes(filter));
     }
-    return anecdotes
+    return anecdotes;
   });
 
   const dispatch = useDispatch();
-  
+
   const vote = (id) => {
     dispatch(addVote(id));
   };
@@ -21,7 +21,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>    
+            <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}
@@ -31,4 +31,3 @@ const AnecdoteList = () => {
 };
 
 export default AnecdoteList;
- 
