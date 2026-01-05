@@ -3,15 +3,15 @@ import AnecdoteList from "./components/AnecdoteList";
 import AnecdoteFiltering from "./components/AnecdoteFiltering";
 import Notification from "./components/Notification";
 import { useEffect } from "react";
-import { getAnecdotes } from "./services/anecdotesService";
 import { useDispatch } from "react-redux";
-import { allAnecdotes } from "./reducers/anecdoteReducer";
+import { initializeAnecdotes } from "./reducers/anecdoteReducer";
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getAnecdotes().then((res) => dispatch(allAnecdotes(res)));
+    // getAnecdotes().then((res) => dispatch(allAnecdotes(res)));
+    dispatch(initializeAnecdotes());
   }, [dispatch]);
 
   return (
