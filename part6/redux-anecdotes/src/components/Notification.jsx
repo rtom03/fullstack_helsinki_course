@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 
 const Notification = () => {
   const selector = useSelector(({ noti }) => noti);
-  console.log(selector);
   return (
     <div>
       {selector && (
