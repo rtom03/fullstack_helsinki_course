@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createNew, getAnecdotes } from "../services/anecdotesService";
+import {
+  createNew,
+  getAnecdotes,
+  updateVote,
+} from "../services/anecdotesService";
 
 const anecdotesSlice = createSlice({
   name: "anecdotes",
   initialState: [],
   reducers: {
     addVote(state, action) {
-      const id = action.payload;
+      const id = action.payload.id;
       const voteAnecdote = state.find((x) => x.id === id);
       const changedAnecdotes = {
         ...voteAnecdote,
@@ -58,6 +62,13 @@ export const appendAnnecdote = (content) => {
   return async (dispatch) => {
     const newAnecdote = await createNew(content);
     dispatch(addAnecdote(newAnecdote));
+  };
+};
+
+export const vote = (id, vote) => {
+  return async (dispatch) => {
+    const iVote = await updateVote(id, vote);
+    dispatch(addVote(iVote));
   };
 };
 

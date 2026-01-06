@@ -1,24 +1,14 @@
 {
   "anecdotes": [
     {
-      "content": "If it hurts, do it more often",
-      "id": "47145",
-      "votes": 0
-    },
-    {
       "id": "2ed5",
       "content": "craftsmanship is a great virtue",
-      "votes": 0
+      "votes": 15
     },
     {
       "id": "4687",
       "content": "Let's Script",
-      "votes": 0
-    },
-    {
-      "id": "efd1",
-      "content": "Coding wprks better with consistense",
-      "votes": 0
+      "votes": 14
     }
   ]
 }
