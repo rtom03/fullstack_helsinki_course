@@ -22,16 +22,21 @@ const createNew = async (content) => {
   return await response.json();
 };
 
-const updateVote = async (id) => {
-  const response = await fetch(baseUrl, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ votes: +1 }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to create note");
+const updateVote = async (id, vote) => {
+  const getItem = await fetch(`${baseUrl}/${id}`);
+  const item = await getItem.json();
+  try {
+    const response = await fetch(`${baseUrl}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...item, votes: item.votes + vote }),
+    });
+    const data = await response.json();
+    console.log(`RESP: ${data}`);
+    return data;
+  } catch (error) {
+    console.log(error);
   }
-  return await response.json();
 };
+
 export { getAnecdotes, createNew, updateVote };
