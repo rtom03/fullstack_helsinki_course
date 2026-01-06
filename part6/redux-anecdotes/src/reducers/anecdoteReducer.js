@@ -46,7 +46,7 @@ const notiSlice = createSlice({
   initialState: [],
   reducers: {
     setNotification(state, action) {
-      console.log(action.payload);
+      // console.log(action.payload);
       return [action.payload];
     },
     clearNotification(state, action) {
@@ -79,7 +79,6 @@ export const vote = (id, vote) => {
 export const notify = (content, timer) => {
   return async (dispatch) => {
     dispatch(setNotification(content));
-
     setTimeout(() => {
       dispatch(clearNotification());
     }, timer);
