@@ -2,14 +2,14 @@ import { useSelector } from "react-redux";
 
 const Notification = () => {
   const selector = useSelector(({ noti }) => noti);
-
+  console.log(selector);
   return (
     <div>
-      {selector.map((sl) => (
-        <div key={sl.message} style={{ color: "green" }}>
-          {sl.display ? sl.message : ""}
+      {selector && (
+        <div key={selector.content} style={{ color: "green" }}>
+          {selector ? selector : ""}
         </div>
-      ))}
+      )}
     </div>
   );
 };
