@@ -32,7 +32,6 @@ const updateVote = async (id, vote) => {
       body: JSON.stringify({ ...item, votes: item.votes + vote }),
     });
     const data = await response.json();
-    console.log(`RESP: ${data}`);
     return data;
   } catch (error) {
     console.log(error);
