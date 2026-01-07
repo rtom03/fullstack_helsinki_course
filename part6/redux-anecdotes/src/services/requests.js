@@ -1,2 +1,2 @@
-import { useQuery } from "@tanstack/react-query";
-const baseUrl = "http://localhost:3001/anecdotes";
+import { useMutation } from "@tanstack/react-query";
+import { createNew } from "./anecdotesService";

@@ -5,7 +5,10 @@ const getAnecdotes = async () => {
   if (!response.ok) {
     throw new Error();
   }
-  return await response.json();
+
+  const data = await response.json();
+  // console.log(data);
+  return data;
 };
 
 const createNew = async (content) => {
@@ -22,9 +25,10 @@ const createNew = async (content) => {
   return await response.json();
 };
 
-const updateVote = async (id, vote) => {
+const updateVote = async (vote) => {
   const getItem = await fetch(`${baseUrl}/${id}`);
   const item = await getItem.json();
+  console.log(id, vote);
   try {
     const response = await fetch(`${baseUrl}/${id}`, {
       method: "PUT",
