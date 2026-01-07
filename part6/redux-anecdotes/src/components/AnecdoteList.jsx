@@ -15,7 +15,7 @@ const AnecdoteList = () => {
     }
     return anecdotes;
   });
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const queryClient = useQueryClient();
 
@@ -27,10 +27,10 @@ const AnecdoteList = () => {
   });
 
   const iVote = async (id) => {
-    let xVote = 1;
+    let vote = 1;
     const slVote = anecdotesList.map((ls) => (ls.id === id ? ls.content : ""));
+    voteMutation.mutate({ id, vote });
     // dispatch(vote(id, xVote));
-    const data = voteMutation.mutate({ id, xVote });
     // dispatch(notify(`Voted for ${slVote}`, 3000));
   };
 

@@ -25,7 +25,7 @@ const createNew = async (content) => {
   return await response.json();
 };
 
-const updateVote = async (vote) => {
+const updateVote = async ({ id, vote }) => {
   const getItem = await fetch(`${baseUrl}/${id}`);
   const item = await getItem.json();
   console.log(id, vote);
