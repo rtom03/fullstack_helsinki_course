@@ -5,6 +5,8 @@ import {
   setNotification,
   vote,
 } from "../reducers/anecdoteReducer";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAnecdotes, updateVote } from "../services/anecdotesService";
 
 const AnecdoteList = () => {
   const anecdotesList = useSelector(({ anecdotes, filter, noti }) => {
@@ -15,23 +17,54 @@ const AnecdoteList = () => {
   });
   const dispatch = useDispatch();
 
+  const queryClient = useQueryClient();
+
+  const voteMutation = useMutation({
+    mutationFn: updateVote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["anecdotes"] });
+    },
+  });
+
   const iVote = async (id) => {
     let xVote = 1;
     const slVote = anecdotesList.map((ls) => (ls.id === id ? ls.content : ""));
-    dispatch(vote(id, xVote));
-    dispatch(notify(`Voted for ${slVote}`, 3000));
+    // dispatch(vote(id, xVote));
+    const data = voteMutation.mutate({ id, xVote });
+    // dispatch(notify(`Voted for ${slVote}`, 3000));
   };
+
+  const anecdotes = useQuery({
+    queryKey: ["anecdotes"],
+    queryFn: getAnecdotes,
+    retry: false,
+  });
+
+  const anecdotesData = anecdotes;
+  // console.log(anecdotes.isSuccess);
+
   return (
     <div>
-      {anecdotesList.map((anecdote) => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => iVote(anecdote.id)}>vote</button>
-          </div>
-        </div>
-      ))}
+      {!anecdotesData.isSuccess ? (
+        <>
+          {" "}
+          <h2>anecdote service not available due to problem in the server</h2>
+        </>
+      ) : (
+        <>
+          {" "}
+          {anecdotesData.data.map((anecdote) => (
+            <div key={anecdote.id}>
+              <div>{anecdote.content}</div>
+              <div>
+                has {anecdote.votes}
+                <button onClick={() => iVote(anecdote.id)}>vote</button>
+              </div>
+            </div>
+          ))}{" "}
+        </>
+      )}
+
       {/* <button onClick={()=>console.log(anecdotes)}>click</button> */}
     </div>
   );
