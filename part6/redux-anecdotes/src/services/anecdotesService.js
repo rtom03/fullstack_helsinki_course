@@ -12,6 +12,7 @@ const getAnecdotes = async () => {
 };
 
 const createNew = async (content) => {
+  if (content.length < 5) throw Error("Failed");
   const response = await fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

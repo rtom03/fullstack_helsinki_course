@@ -1,19 +1,9 @@
 {
   "anecdotes": [
     {
-      "id": "5da8",
+      "id": "bcda",
       "content": "Coding works better with consistense",
-      "votes": 20
-    },
-    {
-      "id": "fd13",
-      "content": "Let's Script",
       "votes": 0
-    },
-    {
-      "id": "d078",
-      "content": "Coding? cool.....More cool with some humor.",
-      "votes": 5
     }
   ]
 }

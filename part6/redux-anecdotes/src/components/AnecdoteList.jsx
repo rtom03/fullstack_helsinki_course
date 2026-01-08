@@ -7,6 +7,8 @@ import {
 } from "../reducers/anecdoteReducer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAnecdotes, updateVote } from "../services/anecdotesService";
+import { useContext } from "react";
+import NotificationContext from "../context/NotificationContext";
 
 const AnecdoteList = () => {
   const anecdotesList = useSelector(({ anecdotes, filter, noti }) => {
@@ -15,9 +17,18 @@ const AnecdoteList = () => {
     }
     return anecdotes;
   });
+
+  const anecdotes = useQuery({
+    queryKey: ["anecdotes"],
+    queryFn: getAnecdotes,
+    retry: false,
+  });
+
+  const anecdotesData = anecdotes;
   // const dispatch = useDispatch();
 
   const queryClient = useQueryClient();
+  const { notificationDispatch } = useContext(NotificationContext);
 
   const voteMutation = useMutation({
     mutationFn: updateVote,
@@ -28,19 +39,24 @@ const AnecdoteList = () => {
 
   const iVote = async (id) => {
     let vote = 1;
-    const slVote = anecdotesList.map((ls) => (ls.id === id ? ls.content : ""));
+    // const slVote = anecdotesList.map((ls) => (ls.id === id ? ls.content : ""));
+    const slVote = anecdotesData.data.map((ls) =>
+      ls.id === id ? ls.content : ""
+    );
+
+    console.log(slVote);
     voteMutation.mutate({ id, vote });
+    notificationDispatch({
+      type: "NOTIFY",
+      payload: `Voted for ${slVote} Anecdotes`,
+    });
+    setTimeout(() => {
+      notificationDispatch({ type: "NULLIFY" });
+    }, 3000);
     // dispatch(vote(id, xVote));
     // dispatch(notify(`Voted for ${slVote}`, 3000));
   };
 
-  const anecdotes = useQuery({
-    queryKey: ["anecdotes"],
-    queryFn: getAnecdotes,
-    retry: false,
-  });
-
-  const anecdotesData = anecdotes;
   // console.log(anecdotes.isSuccess);
 
   return (

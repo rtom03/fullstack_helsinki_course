@@ -1,13 +1,16 @@
+import { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NotificationContext from "../context/NotificationContext";
 
 const Notification = () => {
-  const selector = useSelector(({ noti }) => noti);
+  // const selector = useSelector(({ noti }) => noti);
+
+  const { notification } = useContext(NotificationContext);
+  console.log(notification);
   return (
     <div>
-      {selector && (
-        <div key={selector.content} style={{ color: "green" }}>
-          {selector ? selector : ""}
-        </div>
+      {notification && (
+        <div style={{ color: "green" }}>{notification ? notification : ""}</div>
       )}
     </div>
   );
